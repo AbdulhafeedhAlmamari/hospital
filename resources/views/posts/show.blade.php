@@ -6,6 +6,7 @@
     </style>
 @endsection
 @section('content')
+
     <div class="row">
         <div class="col-12">
             {{-- button --}}
@@ -19,13 +20,13 @@
 
             <ul class="breadcrumb bg-white">
                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ url()->previous() }}">{{ $file_title }}</a></li>
-                <li class="breadcrumb-item active">{{ $file->title }}</li>
+                {{-- <li class="breadcrumb-item"><a href="#">Library</a></li> --}}
+                <li class="breadcrumb-item active">{{ $post_title }}</li>
             </ul>
 
-            @if ($file->files->isNotEmpty())
+            @if ($post->isNotEmpty())
                 <ul class="list-group">
-                    @foreach ($file->files as $file)
+                    @foreach ($post as $file)
                         <li class="list-group-item">
                             <a href="{{ route('files.show', $file) }}">
                                 {{ $file->title }}
@@ -34,9 +35,6 @@
                     @endforeach
                 </ul>
             @endif
-
-
-
         </div>
     </div>
 @endsection

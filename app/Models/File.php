@@ -17,4 +17,9 @@ class File extends Model
     {
         return $this->hasMany(File::class, 'parent_id');
     }
+
+    public function parent()
+    {
+        return $this->belongsTo(File::class, 'parent_id')->where('parent_id', null);
+    }
 }

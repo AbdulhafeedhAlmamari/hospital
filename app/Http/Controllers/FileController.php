@@ -35,16 +35,16 @@ class FileController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
-    {
-        if ($post->files()->exists()) {
-            $file = File::where('post_id', $post->id)->whereNull('parent_id')->get();
-            return view('files.show', compact('file'));
-        }
-        // $file = $post;
+    // public function show(Post $post)
+    // {
+    //     if ($post->files()->exists()) {
+    //         $file = File::where('post_id', $post->id)->whereNull('parent_id')->get();
+    //         return view('files.show', compact('file'));
+    //     }
+    //     // $file = $post;
 
-        return view('files.show', compact('file'));
-    }
+    //     return view('files.show', compact('file'));
+    // }
     /**
      * Show the form for editing the specified resource.
      */
@@ -69,12 +69,12 @@ class FileController extends Controller
         //
     }
 
-    public function showSubTitle(File $file)
+    public function show(File $file)
     {
-        if (!$file->files()->exists()) {
-            return view('files.show', compact('file'));
+        $file_title = $file->title;
+        if ($file->files()->exists()) {
+            return view('files.show', compact('file', 'file_title'));
         } else {
-            // asset('/storage/files/public_files/1.pdf')
             // return response()->file(storage_path('app/public/pdfs/' . $subTitle->pdf_path));
             return response()->file(storage_path('app/public/files/public_files/1.pdf'));
         }

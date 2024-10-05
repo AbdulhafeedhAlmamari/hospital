@@ -37,7 +37,9 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        $post_title = $post->title;
+        $post = $post->files()->whereNull('parent_id')->get();
+        return view('posts.show', compact('post', 'post_title'));
     }
 
     /**

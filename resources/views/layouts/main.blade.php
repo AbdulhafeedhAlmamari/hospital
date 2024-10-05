@@ -25,7 +25,18 @@
 
     {{-- <link href="{!! asset('theme/css/sb-admin-2.css') !!}" rel="stylesheet"> --}}
 
+    <style>
+        ul.list-group {
+            padding: 0
+        }
 
+        #address-list {
+
+            top: 45px;
+            /* margin-bottom: 0px; */
+            cursor: pointer;
+        }
+    </style>
     @yield('cssStyle')
 
 </head>
@@ -47,8 +58,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item  {{ request()->is('/') ? 'active' : '' }}">
-                        <a class="nav-link" href="">
-                            {{-- {{ route('main') }} --}}
+                        <a class="nav-link" href="{{ route('home') }}">
                             <i class="fas fa-home"></i>
                             {{ __('Home') }}
                         </a>
@@ -64,12 +74,24 @@
                     </li> --}}
                 </ul>
 
+
                 {{-- search --}}
-                <form class="form-inline mx-auto">
-                    <input class="form-control mx-sm-2 " type="search" placeholder="{{ __('Search') }}"
-                        aria-label="Search">
+
+                <form action="{{ route('submit.search') }}" method="post"
+                    class="form-inline mx-auto position-relative">
+                    @csrf
+                    <input id="address" name="search" type="text" autocomplete="off" class="form-control mx-sm-2"
+                        placeholder="{{ __('Search') }}" required>
                     <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">{{ __('Search') }}</button>
+
+                    <div id="address-list" class="position-absolute w-75 bg-white border rounded shadow-sm left-4"
+                        style="display: none;">
+                        <ul class="list-group">
+                        </ul>
+                    </div>
                 </form>
+
+
 
                 {{-- select language --}}
                 <div class="dropdown mx-auto">
@@ -150,21 +172,67 @@
                 </div>
             @endif
 
-            <div class="row">
-                <div class="col-12">
-                    {{-- button --}}
-                    <div class="d-flex justify-content-right my-5">
-                        <a href="{{ route('login') }}" class="btn btn-primary">{{ __('OVR') }}</a>
-                    </div>
-                </div>
-            </div>
 
             @yield('content')
         </div>
     </div>
 
-
+    {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> --}}
     @yield('script')
+    <script>
+        $(function() {
+            $('#address').on('keyup', function() {
+                var search = $(this).val();
+                $('#address-list').fadeIn();
+
+                $.ajax({
+                    url: "{{ route('search') }}",
+                    type: 'GET',
+                    data: {
+                        'search': search
+                    }
+                }).done(function(data) {
+                    $('#address-list ul').html(data);
+                    if ($('#address-list ul').children().length === 0) {
+                        $('#address-list').hide();
+                    }
+                });
+            });
+
+            $('#address-list').on('click', 'li', function() {
+                $('#address').val($(this).text());
+                $('#address-list').fadeOut();
+            });
+
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('#address-list').length) {
+                    $('#address-list').fadeOut();
+                }
+            });
+        });
+    </script>
+
+    {{-- <script>
+        $(function() {
+            $('#address').on('keyup', function() {
+                var address = $(this).val();
+                $('#address-list').fadeIn();
+                $.ajax({
+                    url: "{{ route('search') }}",
+                    type: 'GET',
+                    data: {
+                        'search': address
+                    }
+                }).done(function(date) {
+                    $('#address-list').html(date);
+                });
+            });
+            $('#address-list').on('click', 'li', function() {
+                $('#address').val($(this).text());
+                $('#address-list').fadeOut();
+            });
+        });
+    </script> --}}
 </body>
 
 </html>

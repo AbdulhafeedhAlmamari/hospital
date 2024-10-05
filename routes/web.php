@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\OvrReportController;
 use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
@@ -46,9 +47,16 @@ Route::get('lang/{lang}', function ($lang) {
 
 
 // files
-Route::get('/files/{post}', [FileController::class, 'show'])->name('file.show');
-Route::get('/files/detail/{subTitle}', [FileController::class, 'showSubTitle'])->name('subtitles.detail');
+Route::get('/post/{post}', [PostController::class, 'show'])->name('posts.show');
+Route::get('/file/{file}', [FileController::class, 'show'])->name('files.show');
 
+// OVR
+Route::get('/ovr', [OvrReportController::class, 'create'])->name('ovr.create');
+Route::post('/ovr', [OvrReportController::class, 'store'])->name('ovr.store');
+Route::get('/ovr/{ovr}', [OvrReportController::class, 'show'])->name('ovr.show');
+Route::get('/search', [OvrReportController::class, 'search'])->name('search');
+Route::post('search', [OvrReportController::class, 'submitSearch'])->name('submit.search');
+// Admin
 
 Route::get('/admin', function () {
     return view('admin.index');
